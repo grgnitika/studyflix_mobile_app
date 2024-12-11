@@ -22,13 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue.shade900, Colors.black],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        height: double.infinity, // Ensure it covers the entire height
+        width: double.infinity,
+        color: Colors.black,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,8 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
             // App Logo
             Image.asset(
               'assets/images/logo.png',
-              height: 150,
-              width: 150,
+              height: 300,
+              width: 300,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return const Icon(
@@ -52,21 +48,13 @@ class _SplashScreenState extends State<SplashScreen> {
             const Text(
               "StudyFlix",
               style: TextStyle(
-                fontSize: 36,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 letterSpacing: 1.2,
               ),
             ),
             const SizedBox(height: 10),
-            // Tagline
-            const Text(
-              "Learn Anytime, Anywhere",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
             const SizedBox(height: 40),
             // Loading Indicator
             const CircularProgressIndicator(
