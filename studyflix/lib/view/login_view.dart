@@ -17,7 +17,9 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool isHoveringSignUp = false;
+  bool isHoveringSignUp = false; // Remove duplicate declaration
+  bool isHoveringForgotPassword =
+      false; // Tracks hover state for "Forgot Password?"
 
   void _login() {
     final enteredEmail = emailController.text;
@@ -96,12 +98,13 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 25),
+                      // Username TextField
                       TextField(
-                        controller: emailController,
+                        controller: emailController, // Bind the controller
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           label: Text(
-                            'Gmail',
+                            'Username',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -109,14 +112,14 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           suffixIcon: Icon(
-                            Icons.email,
+                            Icons.person,
                             color: Colors.blue,
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextField(
-                        controller: passwordController,
+                        controller: passwordController, // Bind the controller
                         obscureText: true,
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
@@ -130,6 +133,38 @@ class _LoginViewState extends State<LoginView> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Forgot Password as TextButton with Hover Effect
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: MouseRegion(
+                          onEnter: (_) {
+                            setState(() {
+                              isHoveringForgotPassword = true;
+                            });
+                          },
+                          onExit: (_) {
+                            setState(() {
+                              isHoveringForgotPassword = false;
+                            });
+                          },
+                          child: TextButton(
+                            onPressed: () {
+                              print("Forgot Password clicked");
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: TextStyle(
+                                color: isHoveringForgotPassword
+                                    ? Colors.blue
+                                    : Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
@@ -175,7 +210,7 @@ class _LoginViewState extends State<LoginView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                  "Don't have an account? ",
+                                  "New to StudyFlix? ",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey,
