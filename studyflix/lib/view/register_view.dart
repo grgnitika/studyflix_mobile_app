@@ -9,7 +9,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  bool isHoveringSignUp = false; // Track hover state for "Sign Up"
+  bool isHoveringSignUp = false; // Track hover state for "Registration"
   bool isHoveringSignIn = false; // Track hover state for "Sign In"
 
   @override
