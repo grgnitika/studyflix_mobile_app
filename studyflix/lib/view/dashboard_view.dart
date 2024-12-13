@@ -9,10 +9,17 @@ class DashBoardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: const Center(
-        child: Text(
-          'This is my Dashboard page',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      body: Container(
+        color: Colors.black, // Background color
+        child: const Center(
+          child: Text(
+            'This is my Dashboard page',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // text color
+            ),
+          ),
         ),
       ),
     );
