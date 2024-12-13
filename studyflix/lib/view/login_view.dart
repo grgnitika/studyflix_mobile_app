@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyflix/common/snackbar.dart';
 import 'package:studyflix/view/dashboard_view.dart';
 import 'package:studyflix/view/register_view.dart';
 
@@ -10,16 +11,39 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  bool isHoveringSignUp = false; // Tracks hover state for "Sign Up"
-  bool isHoveringForgotPassword =
-      false; // Tracks hover state for "Forgot Password?"
+  final String defaultEmail = "nitika";
+  final String defaultPassword = "12345";
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  bool isHoveringSignUp = false;
+
+  void _login() {
+    final enteredEmail = emailController.text;
+    final enteredPassword = passwordController.text;
+
+    if (enteredEmail == defaultEmail && enteredPassword == defaultPassword) {
+      // If credentials match, navigate to Dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const DashBoardScreen(),
+        ),
+      );
+      // Show success Snackbar
+      Snackbar.showSnackbar(context, 'Login successful!', true);
+    } else {
+      // If credentials do not match, show error Snackbar
+      Snackbar.showSnackbar(context, 'Invalid email or password', false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image and overlay with logo
           Container(
             height: double.infinity,
             width: double.infinity,
@@ -31,26 +55,20 @@ class _LoginViewState extends State<LoginView> {
             ),
             child: Stack(
               children: [
-                // Logo Overlay, now larger and centered
                 Positioned(
-                  top: MediaQuery.of(context).size.height / 3 -
-                      170, // Center the logo vertically with a larger size
-                  left: MediaQuery.of(context).size.width / 2 -
-                      150, // Center the logo horizontally
+                  top: MediaQuery.of(context).size.height / 3 - 170,
+                  left: MediaQuery.of(context).size.width / 2 - 150,
                   child: Image.asset(
                     'assets/images/logo.png',
-                    height: 200, // Increased size of the logo to 200
-                    width: 300, // Increased size of the logo to 200
+                    height: 200,
+                    width: 300,
                   ),
                 ),
               ],
             ),
           ),
-          // Bottom section with form fields
           Padding(
-            padding: const EdgeInsets.only(
-                top:
-                    310.0), // Adjusted padding to accommodate larger logo and text
+            padding: const EdgeInsets.only(top: 310.0),
             child: SingleChildScrollView(
               child: Container(
                 decoration: const BoxDecoration(
@@ -60,34 +78,30 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   color: Colors.black,
                 ),
-                height: MediaQuery.of(context)
-                    .size
-                    .height, // Use the full screen height
+                height: MediaQuery.of(context).size.height,
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 22.0),
                   child: Column(
                     children: [
-                      const SizedBox(height: 40), // Space above the text
-                      Align(
-                        alignment:
-                            Alignment.centerLeft, // Align text to the left
-                        child: const Text(
-                          "Login to your account", // Title text
+                      const SizedBox(height: 40),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Login to your account",
                           style: TextStyle(
                             fontSize: 22,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 25), // Space before username field
-                      // Username TextField
-                      const TextField(
-                        style: TextStyle(
-                            color: Colors.white), // Set text color to white
-                        decoration: InputDecoration(
+                      const SizedBox(height: 25),
+                      TextField(
+                        controller: emailController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
                           label: Text(
-                            'Username',
+                            'Gmail',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -95,21 +109,20 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           suffixIcon: Icon(
-                            Icons.person, // Username icon on the right
-                            color: Colors.blue, // Set icon color to blue
+                            Icons.email,
+                            color: Colors.blue,
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Password TextField
-                      const TextField(
-                        obscureText: true, // Ensures password security
-                        style: TextStyle(
-                            color: Colors.white), // Set text color to white
-                        decoration: InputDecoration(
+                      TextField(
+                        controller: passwordController,
+                        obscureText: true,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
                           suffixIcon: Icon(
                             Icons.visibility_off,
-                            color: Colors.blue, // Set icon color to blue
+                            color: Colors.blue,
                           ),
                           label: Text(
                             'Password',
@@ -122,41 +135,6 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Forgot Password as TextButton with Hover Effect
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: MouseRegion(
-                          onEnter: (_) {
-                            setState(() {
-                              isHoveringForgotPassword = true;
-                            });
-                          },
-                          onExit: (_) {
-                            setState(() {
-                              isHoveringForgotPassword = false;
-                            });
-                          },
-                          child: TextButton(
-                            onPressed: () {
-                              print("Forgot Password clicked");
-                            },
-                            child: Text(
-                              "Forgot Password?",
-                              style: TextStyle(
-                                color: isHoveringForgotPassword
-                                    ? Colors.blue
-                                    : Colors
-                                        .white, // Change text color on hover
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                          height:
-                              20), // Reduced space between Sign In button and "New to StudyFlix?" text
                       Container(
                         height: 55,
                         width: 240,
@@ -166,18 +144,9 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         child: Center(
                           child: TextButton(
-                            onPressed: () {
-                              // Navigate to the Dashboard page
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DashBoardScreen(), // Replace with your Dashboard page
-                                ),
-                              );
-                            },
+                            onPressed: _login,
                             child: const Text(
-                              'Sign in',
+                              'Login',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -206,7 +175,7 @@ class _LoginViewState extends State<LoginView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                  "New to StudyFlix? ",
+                                  "Don't have an account? ",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey,
@@ -215,24 +184,23 @@ class _LoginViewState extends State<LoginView> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    // Navigate to the Register page
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const RegisterView(), // Replace with your Register page
+                                            const RegisterView(),
                                       ),
                                     );
                                   },
                                   style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero, // Remove padding
+                                    padding: EdgeInsets.zero,
                                   ),
                                   child: Text(
                                     "Sign Up",
                                     style: TextStyle(
                                       color: isHoveringSignUp
                                           ? Colors.blue
-                                          : Colors.white, // Hover color
+                                          : Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     ),
