@@ -18,8 +18,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController passwordController = TextEditingController();
 
   bool isHoveringSignUp = false; // Remove duplicate declaration
-  bool isHoveringForgotPassword =
-      false; // Tracks hover state for "Forgot Password?"
+  bool isHoveringForgotPassword = false;
 
   void _login() {
     final enteredEmail = emailController.text;

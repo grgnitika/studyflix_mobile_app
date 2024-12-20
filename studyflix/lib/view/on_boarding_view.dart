@@ -1,116 +1,212 @@
 import 'package:flutter/material.dart';
-import 'package:studyflix/view/login_view.dart';
-import 'package:studyflix/view/register_view.dart';
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+import 'login_view.dart'; // Import the LoginView page
+
+class OnBoardingView extends StatefulWidget {
+  const OnBoardingView({super.key});
 
   @override
-  _OnboardingScreenState createState() => _OnboardingScreenState();
+  _OnBoardingViewState createState() => _OnBoardingViewState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  bool isHovering = false; // Tracks hover state
+class _OnBoardingViewState extends State<OnBoardingView> {
+  final PageController _controller = PageController();
+  int _currentPage = 0;
+
+  final List<Map<String, String>> onboardingData = [
+    {
+      "title": "Welcome to StudyFlix!",
+      "subtitle":
+          "Stream unlimited educational videos tailored to your learning needs. Study smarter with StudyFlix.",
+      "image": "assets/images/1.jpg", // Replace with your image path
+    },
+    {
+      "title": "Focused Learning",
+      "subtitle":
+          "Say goodbye to distractions and focus on what truly matters: your education. Only educational content here!",
+      "image": "assets/images/img1.jpg", // Replace with your image path
+    },
+    {
+      "title": "Search & Discover",
+      "subtitle":
+          "Quickly find what you need. Explore trending topics and enhance your knowledge anytime, anywhere.",
+      "image": "assets/images/a.jpg", // Replace with your image path
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/bg.jpg',
-              fit: BoxFit.cover,
+          PageView.builder(
+            controller: _controller,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
+            itemCount: onboardingData.length,
+            itemBuilder: (context, index) {
+              return OnboardingPage(
+                title: onboardingData[index]["title"]!,
+                subtitle: onboardingData[index]["subtitle"]!,
+                image: onboardingData[index]["image"]!,
+              );
+            },
+          ),
+          Positioned(
+            bottom: 80,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                onboardingData.length,
+                (index) => buildDot(index, context),
+              ),
             ),
           ),
-          // Overlay Content
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  height: 300,
-                  width: 300,
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Begin Your Journey to Focused Learning",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w300,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                // Get Started Button
-                ElevatedButton(
+          if (_currentPage == onboardingData.length - 1)
+            Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to Login Page
-                    Navigator.push(
+                    // Navigate to LoginView
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LoginView(),
-                      ),
+                          builder: (context) => const LoginView()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Button color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 17),
+                    backgroundColor: Colors.blue, // Blue button background
+                    minimumSize: const Size(150, 50),
                   ),
                   child: const Text(
                     "Get Started",
                     style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w200,
-                        color: Colors.white),
+                        fontSize: 16, color: Colors.white), // White text
                   ),
                 ),
-                const SizedBox(height: 10),
-                // Create Account Text
-                MouseRegion(
-                  onEnter: (_) {
-                    setState(() {
-                      isHovering = true; // Change hover state
-                    });
-                  },
-                  onExit: (_) {
-                    setState(() {
-                      isHovering = false; // Reset hover state
-                    });
-                  },
-                  child: TextButton(
+              ),
+            )
+          else
+            Positioned(
+              bottom: 20,
+              left: 16,
+              right: 16,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
                     onPressed: () {
-                      // Navigate to Register Page
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterView(),
-                        ),
-                      );
+                      _controller.jumpToPage(onboardingData.length - 1);
                     },
-                    child: Text(
-                      "Create an account",
-                      style: TextStyle(
-                        color: isHovering
-                            ? Colors.blue
-                            : Colors.white, // Change text color on hover
-                        fontWeight: FontWeight.w400,
-                      ),
+                    child: const Text(
+                      "Skip",
+                      style: TextStyle(color: Colors.blue, fontSize: 16),
                     ),
                   ),
-                ),
-              ],
+                  ElevatedButton(
+                    onPressed: () {
+                      _controller.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue, // Blue button background
+                      minimumSize: const Size(100, 50),
+                    ),
+                    child: const Text(
+                      "Next",
+                      style: TextStyle(
+                          fontSize: 16, color: Colors.white), // White text
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
+    );
+  }
+
+  AnimatedContainer buildDot(int index, BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      height: 10,
+      width: _currentPage == index ? 20 : 10,
+      decoration: BoxDecoration(
+        color: _currentPage == index ? Colors.blue : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
+  }
+}
+
+class OnboardingPage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String image;
+
+  const OnboardingPage({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Wrap the image with Transform.scale for zoom-out effect
+        Transform.scale(
+          scale: 0.9, // Adjust this value to control the zoom-out effect
+          child: SizedBox(
+            width: double.infinity, // Ensure the image takes up the full width
+            height:
+                double.infinity, // Ensure the image takes up the full height
+            child: Image.asset(
+              image,
+              fit: BoxFit.cover, // Ensures the image covers the screen area
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.black.withOpacity(0.5), // Dark overlay for readability
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                subtitle,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
