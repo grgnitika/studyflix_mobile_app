@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        color: Colors.white, // Change background to white
+        color: Colors.black,
         child: Center(
           child: AnimatedBuilder(
             animation: _logoController,
