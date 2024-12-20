@@ -25,7 +25,7 @@ class _LoginViewState extends State<LoginView> {
     final enteredPassword = passwordController.text;
 
     if (enteredEmail == defaultEmail && enteredPassword == defaultPassword) {
-      // If credentials match, navigate to HomeView (Dashboard)
+      // If credentials match, navigate to HomeView
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -55,8 +55,19 @@ class _LoginViewState extends State<LoginView> {
               ),
             ),
           ),
+
+          Positioned(
+            top: 60,
+            left: MediaQuery.of(context).size.width / 3 - 50,
+            child: Image.asset(
+              'assets/images/logo.png',
+              height: 300,
+            ),
+          ),
+
+          // Login Form Overlay
           Padding(
-            padding: const EdgeInsets.only(top: 310.0),
+            padding: const EdgeInsets.only(top: 390.0),
             child: SingleChildScrollView(
               child: Container(
                 decoration: const BoxDecoration(
@@ -84,9 +95,8 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 25),
-                      // Username TextField
                       TextField(
-                        controller: emailController, // Bind the controller
+                        controller: emailController,
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           label: Text(
@@ -104,9 +114,8 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Password TextField
                       TextField(
-                        controller: passwordController, // Bind the controller
+                        controller: passwordController,
                         obscureText: true,
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
@@ -125,7 +134,6 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Forgot Password TextButton
                       Align(
                         alignment: Alignment.centerRight,
                         child: MouseRegion(
