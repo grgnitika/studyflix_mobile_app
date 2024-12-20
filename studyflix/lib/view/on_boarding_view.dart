@@ -18,19 +18,19 @@ class _OnBoardingViewState extends State<OnBoardingView> {
       "title": "Welcome to StudyFlix!",
       "subtitle":
           "Stream unlimited educational videos tailored to your learning needs. Study smarter with StudyFlix.",
-      "image": "assets/images/1.jpg", // Replace with your image path
+      "image": "assets/images/two.png",
     },
     {
       "title": "Focused Learning",
       "subtitle":
           "Say goodbye to distractions and focus on what truly matters: your education. Only educational content here!",
-      "image": "assets/images/img1.jpg", // Replace with your image path
+      "image": "assets/images/three.png",
     },
     {
       "title": "Search & Discover",
       "subtitle":
           "Quickly find what you need. Explore trending topics and enhance your knowledge anytime, anywhere.",
-      "image": "assets/images/a.jpg", // Replace with your image path
+      "image": "assets/images/one.png",
     },
   ];
 
@@ -164,49 +164,37 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // Wrap the image with Transform.scale for zoom-out effect
-        Transform.scale(
-          scale: 0.9, // Adjust this value to control the zoom-out effect
-          child: SizedBox(
-            width: double.infinity, // Ensure the image takes up the full width
-            height:
-                double.infinity, // Ensure the image takes up the full height
-            child: Image.asset(
-              image,
-              fit: BoxFit.cover, // Ensures the image covers the screen area
-            ),
+    return Container(
+      color: Colors.black, // Set background color to black
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            image, // Centered image
+            width: 400, // Adjust width as needed
+            height: 300, // Adjust height as needed
           ),
-        ),
-        Container(
-          color: Colors.black.withOpacity(0.5), // Dark overlay for readability
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+          const SizedBox(height: 20),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              subtitle,
+              style: const TextStyle(fontSize: 16, color: Colors.white),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                subtitle,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
