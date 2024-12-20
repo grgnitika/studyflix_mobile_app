@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyflix/common/snackbar.dart';
-import 'package:studyflix/view/dashboard_view.dart';
+import 'package:studyflix/view/home_view.dart';
 import 'package:studyflix/view/register_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -17,7 +17,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool isHoveringSignUp = false; // Remove duplicate declaration
+  bool isHoveringSignUp = false;
   bool isHoveringForgotPassword = false;
 
   void _login() {
@@ -25,11 +25,11 @@ class _LoginViewState extends State<LoginView> {
     final enteredPassword = passwordController.text;
 
     if (enteredEmail == defaultEmail && enteredPassword == defaultPassword) {
-      // If credentials match, navigate to Dashboard
+      // If credentials match, navigate to HomeView (Dashboard)
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const DashBoardScreen(),
+          builder: (context) => const HomeView(),
         ),
       );
       // Show success Snackbar
@@ -53,19 +53,6 @@ class _LoginViewState extends State<LoginView> {
                 image: AssetImage('assets/images/bg.jpg'),
                 fit: BoxFit.cover,
               ),
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: MediaQuery.of(context).size.height / 3 - 170,
-                  left: MediaQuery.of(context).size.width / 2 - 150,
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    height: 200,
-                    width: 300,
-                  ),
-                ),
-              ],
             ),
           ),
           Padding(
@@ -117,6 +104,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      // Password TextField
                       TextField(
                         controller: passwordController, // Bind the controller
                         obscureText: true,
@@ -137,7 +125,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      // Forgot Password as TextButton with Hover Effect
+                      // Forgot Password TextButton
                       Align(
                         alignment: Alignment.centerRight,
                         child: MouseRegion(
@@ -169,6 +157,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      // Login Button
                       Container(
                         height: 55,
                         width: 240,
