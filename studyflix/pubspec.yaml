@@ -17,6 +17,7 @@ dependencies:
 
   # Smooth page indicators
   smooth_page_indicator: ^1.0.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -32,6 +33,7 @@ flutter:
   # Add image assets
   assets:
     - assets/images/
+
   # Add custom fonts
   fonts:
     - family: "OpenSans Bold"
