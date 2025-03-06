@@ -1,217 +1,144 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:studyflix/core/theme/app_theme.dart';
+import 'package:studyflix/features/course/presentation/view/course_card_view.dart';
+import 'package:studyflix/features/course/presentation/view/single_course_view.dart';
 
-class HomeScreen extends StatelessWidget {
-  final List<String> carouselImages = [
-    'assets/images/1.jpeg',
-    'assets/images/2.jpg',
-    'assets/images/3.jpeg',
-  ];
+import '../../../../../core/theme/theme_cubit.dart';
+import '../bottom_view_model/dashboard_bloc.dart';
+import '../bottom_view_model/dashboard_event.dart';
+import '../bottom_view_model/dashboard_state.dart';
 
-  final List<Map<String, String>> continueWatching = [
-    {'title': 'Chemistry', 'image': 'assets/images/4.jpeg'},
-    {'title': 'Coding', 'image': 'assets/images/5.jpg'},
-    {'title': 'Biology', 'image': 'assets/images/6.jpg'},
-    {'title': 'Educational', 'image': 'assets/images/7.jpg'},
-    {'title': 'Chemistry', 'image': 'assets/images/4.jpeg'},
-    {'title': 'Coding', 'image': 'assets/images/5.jpg'},
-  ];
-
-  final List<Map<String, String>> popularOnNetflix = [
-    {'title': 'Biology', 'image': 'assets/images/6.jpg'},
-    {'title': 'Educational', 'image': 'assets/images/7.jpg'},
-    {'title': 'Chemistry', 'image': 'assets/images/4.jpeg'},
-    {'title': 'Coding', 'image': 'assets/images/5.jpg'},
-    {'title': 'Educational', 'image': 'assets/images/7.jpg'},
-    {'title': 'Biology', 'image': 'assets/images/6.jpg'},
-  ];
-
-  HomeScreen({super.key});
+class DashboardView extends StatefulWidget {
+  const DashboardView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Row(
-          children: [
-            Icon(Icons.home, color: Colors.white),
-            SizedBox(width: 6),
-            Text('StudyFlix',
-                style: TextStyle(color: Colors.white, fontSize: 18)),
-          ],
-        ),
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      body: ListView(
-        children: [
-          // Stack for Buttons over Carousel Section
-          Stack(
-            children: [
-              CarouselSlider(
-                items: carouselImages.map((image) {
-                  return Image.asset(
-                    image,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                  );
-                }).toList(),
-                options: CarouselOptions(
-                  height: 300,
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  viewportFraction: 1.0,
-                ),
-              ),
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: 20,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Play Button
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.play_arrow, color: Colors.white),
-                      label: const Text('Play',
-                          style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 14),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        minimumSize: const Size(200, 50),
-                      ),
-                    ),
-                    // Add to Playlist Button
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.bookmark, color: Colors.white),
-                      label: const Text('Add to PlayList',
-                          style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 14),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        minimumSize: const Size(200, 50),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          // Continue Watching Section
-          Section(
-            title: 'Continue Watching',
-            items: continueWatching,
-          ),
-          const SizedBox(height: 30),
-          // Popular on Studyflix Section
-          Section(
-            title: 'Popular on Studyflix',
-            items: popularOnNetflix,
-          ),
-        ],
-      ),
-    );
-  }
+  _DashboardViewState createState() => _DashboardViewState();
 }
 
-class Section extends StatelessWidget {
-  final String title;
-  final List<Map<String, String>> items;
-  final ScrollController _controller =
-      ScrollController(); // Controller for horizontal scrolling
-
-  Section({super.key, required this.title, required this.items});
+class _DashboardViewState extends State<DashboardView> {
+  final List<String> _selectedCategories = [];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            title,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
+    final themeCubit = context.watch<ThemeCubit>();
+    final isDarkMode = themeCubit.state.isDarkMode;
+
+    return BlocProvider(
+      create: (context) =>
+          DashboardBloc(courseRepository: null)..add(LoadDashboardData()),
+      child: Scaffold(
+        backgroundColor: isDarkMode ? Colors.black : Colors.grey[100],
+        appBar: AppBar(
+          backgroundColor: isDarkMode ? Colors.grey[900] : primaryColor,
+          title: const Text(
+            'Featured Courses',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list, color: Colors.white),
+              onPressed: () {
+                Fluttertoast.showToast(msg: "Filter clicked");
+              },
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 150,
-          child: Stack(
-            children: [
-              ListView.builder(
-                controller: _controller,
-                scrollDirection: Axis.horizontal,
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          items[index]['image']!,
-                          height: 120,
-                          width: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          items[index]['title']!,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ],
+        body: BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) {
+            if (state is DashboardLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is DashboardLoaded) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Category Filters
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "Categories",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
                     ),
-                  );
-                },
-              ),
-              Positioned(
-                right: 8,
-                top: 60,
-                child: IconButton(
-                  icon:
-                      const Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  onPressed: () {
-                    _controller.animateTo(
-                      _controller.offset + 200,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      spacing: 10,
+                      children: state.categories.map((category) {
+                        return FilterChip(
+                          checkmarkColor: Colors.white,
+                          label: Text(category),
+                          selected: _selectedCategories.contains(category),
+                          selectedColor: secondaryColor,
+                          labelStyle: TextStyle(
+                            color: _selectedCategories.contains(category)
+                                ? Colors.white
+                                : (isDarkMode ? Colors.white : Colors.black),
+                          ),
+                          backgroundColor:
+                              isDarkMode ? Colors.grey[700] : Colors.grey[300],
+                          onSelected: (bool selected) {
+                            setState(() {
+                              if (selected) {
+                                _selectedCategories.add(category);
+                              } else {
+                                _selectedCategories.remove(category);
+                              }
+                            });
+                            context.read<DashboardBloc>().add(
+                                FilterCourses(List.from(_selectedCategories)));
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                  // Workshop Grid (Using the separate component)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "Courses",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
+                  CourseCardView(
+                    // courses: state.courses,
+                    onTap: (courseId) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SingleCourseView(courseId: courseId),
+                        ),
+                      );
+                    },
+                    courses: const [],
+                  ),
+                ],
+              );
+            } else if (state is DashboardError) {
+              return Center(
+                child: Text(
+                  state.message,
+                  style: const TextStyle(color: Colors.red),
                 ),
-              ),
-              Positioned(
-                left: 8,
-                top: 60,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-                  onPressed: () {
-                    _controller.animateTo(
-                      _controller.offset - 200,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+              );
+            } else {
+              return const Center(child: Text("Something went wrong"));
+            }
+          },
         ),
-      ],
+      ),
     );
   }
 }
