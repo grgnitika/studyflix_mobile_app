@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyflix/features/auth/presentation/view/login_view.dart'; // Import the LoginView page
+import 'package:studyflix/features/auth/presentation/view/login_view.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({super.key});
@@ -78,7 +78,8 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginView()),
+                        builder: (context) => LoginView(),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
