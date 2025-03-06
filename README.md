@@ -6,6 +6,7 @@ Built using Flutter and Dart, the app follows the MVVM (Model-View-ViewModel) ar
 Whether you're preparing for exams, acquiring new skills, or expanding your knowledge, StudyFlix offers a distraction-free learning environment with easy access to video-based courses.
 
 Key Features 🌟
+
 🔐 User Authentication
 Register and log in securely to access personalized learning content.
 
@@ -59,6 +60,7 @@ Conclusion 🌱
 StudyFlix Mobile App is not just a learning tool—it’s a structured and organized educational hub designed for seamless access to learning materials. By integrating modern technology with a user-friendly design, StudyFlix empowers users to discover, filter, and access courses effortlessly.
 
 📸 Application Screenshots
+
 ![image](https://github.com/user-attachments/assets/0c168d41-0797-4d9a-b242-e248e6d22cea)
 
 ![image](https://github.com/user-attachments/assets/af5fb2aa-5944-49e8-a145-ce4a762b8334)
